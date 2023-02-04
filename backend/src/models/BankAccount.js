@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import db from "../db/configDB.js";
+import User from "./User.js";
 
 const BankAccount = db.get().define(
     "BankAccount",
@@ -21,18 +22,22 @@ const BankAccount = db.get().define(
             type: DataTypes.STRING,
             allowNull: true
         },
-        user_id: {
+        id_user: {
             type: DataTypes.UUID,
-            allowNull: false
+            references: {
+                model: User,
+                key: 'id',
+            },
         }
     },
     {
         schema: "PDBADMIN",
     }
 );
-/*
-const UserBankAccount = sequelize.define('UserBankAccount', {});
-User.belongsToMany(BankAccount, { through: UserBankAccount });
-BankAccount.belongsToMany(User, { through: UserBankAccount });
-*/
+
+
+
+User.hasMany(BankAccount, { foreignKey: 'id_user', sourceKey: 'id',onDelete:'restrict'});
+BankAccount.belongsTo(User, { foreignKey: 'id_user', targetKey: 'id', });
+
 export default BankAccount;

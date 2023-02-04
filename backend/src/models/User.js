@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../db/configDB.js";
 
+
 const User = db.get().define(
     "User",
     {
@@ -30,5 +31,6 @@ const User = db.get().define(
         schema: "PDBADMIN",
     }
 );
+
 
 export default User;

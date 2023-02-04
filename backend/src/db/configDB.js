@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import { config as configureEnvVars } from "dotenv";
 
+
+
 class DB {
     sequelize;
     constructor() {
@@ -18,10 +20,9 @@ class DB {
         try {
             await this.sequelize.authenticate();
             await this.sequelize.sync();
-
             console.log('DB IS RUNNING');
         } catch (error) {
-            console.error('ERROR IN DB CONNECTION')
+            console.error('ERROR IN DB CONNECTION',error)
         }
     }
 
@@ -30,6 +31,9 @@ class DB {
     }
 }
 
+
 const db= new DB();
+
+
 
 export default db;
