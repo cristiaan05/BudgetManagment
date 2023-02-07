@@ -6,6 +6,7 @@ import bankRouter from "../routes/bankRoutes.js";
 import userRouter from "../routes/userRoutes.js";
 import cookieParser from "cookie-parser"
 import transRouter from "../routes/transactionRoutes.js";
+import transferRouter from "../routes/transferRoutes.js";
 const app = express();
 
 app.use(cors());
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   "/app",
-  userRouter,bankRouter,transRouter
+  userRouter,bankRouter,transRouter,transferRouter
 );
 
 export default app;

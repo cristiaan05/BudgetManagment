@@ -18,12 +18,20 @@ const Transfer = db.get().define(
             type: DataTypes.DECIMAL,
             allowNull: false
         }
+        ,
+        currency: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     },
     {
         schema: "PDBADMIN",
     }
 );
-/*
+
 BankAccount.hasMany(Transfer, { foreignKey: 'id_account', sourceKey: 'id' });
-Transfer.belongsTo(BankAccount, { foreignKey: 'id_account', targetKey: 'id' });*/
+Transfer.belongsTo(BankAccount, { foreignKey: 'id_account', targetKey: 'id' });
+
+BankAccount.hasMany(Transfer, { foreignKey: 'id_account_destination', sourceKey: 'id' });
+Transfer.belongsTo(BankAccount, { foreignKey: 'id_account_destination', targetKey: 'id' });
 export default Transfer;
