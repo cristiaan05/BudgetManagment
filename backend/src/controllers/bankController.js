@@ -20,9 +20,9 @@ export async function addAcount(request, response) {
         const idUser = decodedToken.id
         console.log("this is the token loggin: ", decodedToken.id);
 
-        
+
         const userFound = await User.findOne({
-            where: { id:idUser },
+            where: { id: idUser },
         });
 
         if (!userFound) {
@@ -35,7 +35,7 @@ export async function addAcount(request, response) {
             account_name,
             balance,
             currency,
-            id_user:idUser
+            id_user: idUser
         }).save();
 
         response.status(200).send({
@@ -50,3 +50,39 @@ export async function addAcount(request, response) {
         });
     }
 }
+
+export async function getAccounts(request, response) {
+    configureEnvVars()
+    try {
+        //extract the id of user logged by the token in cookies authorization
+        const decodedToken = request.token
+        const idUser = decodedToken.id
+        //console.log("this is the token loggin: ", decodedToken.id);
+
+
+        const accounts = await BankAccount.findAll({
+            where: { id_user: idUser },
+        });
+
+        if (!accounts) {
+            return response.status(404).send({
+                successfull: false,
+                message: "User not found"
+            });
+        }
+
+        return response.status(200).send({
+            successfull: true,
+            message: "Accounts User",
+            accounts: accounts
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        return response.status(404).send({
+            successfull: false,
+            message: "Error getting the accounts"
+        });
+    };
+};

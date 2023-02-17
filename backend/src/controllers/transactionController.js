@@ -60,6 +60,7 @@ export async function transactionHistory(request, response) {
             where: {
 
                 date: {
+                    //$.between: [dateStart, dateEnd]
                     [Op.between]: [dateStart, dateEnd]
                 },
                 [Op.and]: [
@@ -132,6 +133,7 @@ export async function transactionHistory(request, response) {
                 };
             }
         }
+        
 
         if (request.body.category) {
             filters.category = request.body.category;
@@ -153,3 +155,4 @@ export async function transactionHistory(request, response) {
         }
     }
 }
+

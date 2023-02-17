@@ -10,6 +10,7 @@ export async function signUp(request, response) {
     if (!request.body.email || !request.body.password || !request.body.lastname || !request.body.name) {
       return response.status(400).send({
         message: "user data is missing",
+        successfull:false
       });
     }
 
@@ -22,7 +23,7 @@ export async function signUp(request, response) {
     if (userAlreadyExists) {
       return response
         .status(400)
-        .send({ message: "user already exists" });
+        .send({ message: "user already exists",successfull:false, });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -35,6 +36,7 @@ export async function signUp(request, response) {
     }).save();
 
     response.send({
+      successfull:true,
       message: "User Created Successfully",
       user: user.getDataValue("id")
     });
@@ -43,6 +45,7 @@ export async function signUp(request, response) {
     console.log(error);
     response.status(500).send({
       message: "Error creating the new user",
+      successfull:false,
     });
 
   }
@@ -54,7 +57,7 @@ export async function signIn(request, response) {
     if (!request.body.email || !request.body.password) {
       return response
         .status(404)
-        .send({ message: "user data missing" });
+        .send({ successfull: false, message: "user data missing" });
     }
 
     const { email, password } = request.body;
@@ -64,7 +67,7 @@ export async function signIn(request, response) {
     });
 
     if (!userFound) {
-      return response.status(404).send({ message: "User not found" });
+      return response.status(404).send({ successfull: false, message: "User not found" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -75,7 +78,7 @@ export async function signIn(request, response) {
     if (!isPasswordCorrect) {
       return response
         .status(400)
-        .send({ message: "password is wrong" });
+        .send({ successfull: false, message: "password is wrong" });
     }
 
     const userPayload = {
@@ -86,14 +89,16 @@ export async function signIn(request, response) {
 
     const token = jwt.sign(userPayload, process.env.PRIVATE_KEY);
     response.cookie("authorization", token);
-    response.status(200).send({
-        message:"Login Successfull",
-        token: token
+    return response.status(200).send({
+      successfull: true,
+      message: "Login Successfull",
+      token: token
     })
 
-    response.end();
+    //response.end();
   } catch (error) {
     response.status(500).send({
+      successfull: false,
       message: "Error during log in process",
     });
   }
