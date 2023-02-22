@@ -11,7 +11,7 @@ const Transaction = db.get().define(
             primaryKey: true,
         },
         amount: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false
         },
         date: {
@@ -34,14 +34,14 @@ const Transaction = db.get().define(
                 key: 'id',
             },
         }
-        
+
     },
     {
         schema: "PDBADMIN",
     }
 );
 
-BankAccount.hasMany(Transaction, { foreignKey: 'id_bank_account', sourceKey: 'id'});
+BankAccount.hasMany(Transaction, { foreignKey: 'id_bank_account', sourceKey: 'id' });
 Transaction.belongsTo(BankAccount, { foreignKey: 'id_bank_account', targetKey: 'id', });
 
 

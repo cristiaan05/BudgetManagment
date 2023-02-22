@@ -7,7 +7,7 @@ export async function auth(request, response, next) {
 
   try {
     const { authorization: cookieAuth } = request.cookies;
-    console.log(request.cookies)
+    //console.log(request.cookies)
     if (!cookieAuth) {
       return response.status(401).send({ message: "Not Authorized" });
     }

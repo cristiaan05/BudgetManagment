@@ -15,7 +15,7 @@ const BankAccount = db.get().define(
             allowNull: false
         },
         balance: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10,2),
             allowNull: true
         },
         currency: {

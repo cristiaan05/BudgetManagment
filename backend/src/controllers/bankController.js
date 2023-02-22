@@ -33,12 +33,13 @@ export async function addAcount(request, response) {
 
         const bankAccount = await BankAccount.build({
             account_name,
-            balance,
+            balance:parseFloat(balance),
             currency,
             id_user: idUser
         }).save();
 
-        response.status(200).send({
+        return response.status(200).send({
+            successfull:true,
             message: "Bank Account Created Successfully",
             bank_account: bankAccount
         });
