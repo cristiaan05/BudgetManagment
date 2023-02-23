@@ -31,11 +31,39 @@ const rates = [
     { JPY: 1, EUR: 0.006992 }
 ]
 
+const ratesSymbols = [
+    //USD
+    { $: 1, '€': 0.943042 },
+    { $: 1, $$: 18.363905 },
+    { $: 1, '¥': 134.865498 },
+    { $: 1, Q: 7.815839 },
+    //MXN
+    { $$: 1, Q: 0.425563 },
+    { $$: 1, $: 0.054456 },
+    { $$: 1, '¥': 7.344122 },
+    { $$: 1, '€': 0.051344 },
+    //EUR
+    { '€': 1, $$: 19.473843 },
+    { '€': 1, $: 1.060459 },
+    { '€': 1, '¥': 143.016116 },
+    { '€': 1, Q: 8.288375 },
+    //GTQ
+    { Q: 1, '€': 0.120639 },
+    { Q: 1, $: 0.127945 },
+    { Q: 1, '¥': 17.255217 },
+    { Q: 1, $$: 2.349828 },
+    //JPY
+    { '¥': 1, $$: 0.136181 },
+    { '¥': 1, $: 0.007415 },
+    { '¥': 1, Q: 0.057953 },
+    { '¥': 1, '€': 0.006992 }
+]
+
 export async function getExchangeRates(request, response) {
     configureEnvVars();
 
     try {
-        const { baseCurrency, currencyToChange,baseValue } = request.body;
+        const { baseCurrency, currencyToChange, baseValue } = request.body;
         if (!baseCurrency || !currencyToChange) {
             return response
                 .status(404)
@@ -49,14 +77,14 @@ export async function getExchangeRates(request, response) {
         // console.log(filteredRates);
         const filteredRates = rates.filter(rate => {
             return rate[baseCurrency] !== undefined && rate[currencyToChange] !== undefined;
-          });
-          
-          const rate = filteredRates.find(rate => rate[baseCurrency] === 1 && rate[currencyToChange]);
-          let rateBaseToExchange=rate[`${currencyToChange}`]/rate[`${baseCurrency}`]
-          console.log(rate);
-          let exchangeValue=(baseValue*rateBaseToExchange).toFixed(2);
-          console.log(baseValue*rateBaseToExchange)
-        let first = matchingRates.length > 0 ? matchingRates[0] : null
+        });
+
+        const rate = filteredRates.find(rate => rate[baseCurrency] === 1 && rate[currencyToChange]);
+        let rateBaseToExchange = rate[`${currencyToChange}`] / rate[`${baseCurrency}`]
+        console.log(rate);
+        let exchangeValue = (baseValue * rateBaseToExchange).toFixed(2);
+        console.log(baseValue * rateBaseToExchange)
+        // let first = matchingRates.length > 0 ? matchingRates[0] : null
         return response.status(200).send({
             base: rate[`${baseCurrency}`],
             change: rate[`${currencyToChange}`],
@@ -89,10 +117,23 @@ export async function getExchangeRates(request, response) {
     } catch (error) {
         console.error(error);
         return response.status(500).send({
-            successfull:false,
+            successfull: false,
             message: "Error creating the exchange"
         });
     }
 }
 
+
+export default function getExchangeConvertion(baseCurrency, currencyToChange,valueToConvert) {
+    const filteredRates = ratesSymbols.filter(rate => {
+        return rate[baseCurrency] !== undefined && rate[currencyToChange] !== undefined;
+    });
+
+    const rate = filteredRates.find(rate => rate[baseCurrency] === 1 && rate[currencyToChange]);
+    let rateBaseToExchange = rate[`${currencyToChange}`] / rate[`${baseCurrency}`]
+    console.log("rate",rate);
+    let exchangeValue = (valueToConvert * rateBaseToExchange).toFixed(2);
+    console.log("exhange value",exchangeValue)
+    return exchangeValue
+}
 //getExchangeRates('USD');

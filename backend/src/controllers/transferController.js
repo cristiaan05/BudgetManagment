@@ -2,6 +2,7 @@ import { config as configureEnvVars } from "dotenv";
 import BankAccount from "../models/BankAccount.js";
 import Transaction from "../models/Transactions.js";
 import Transfer from "../models/Transfer.js";
+import getExchangeConvertion from "./exchanges.js";
 
 
 export async function createTransferWithin(request, response) {
@@ -65,27 +66,45 @@ export async function createTransferWithin(request, response) {
                     amount: parseFloat(amount),
                     date,
                     category,
-                    type: 'income',
+                    type: 'expense',
                     id_bank_account: id_account
                 }).save();
-                console.log(bankAccountFrom.balance, transactionOut.amount)
-                const amountWithCommaFrom = amount.replace(".", ",");
-                bankAccountFrom.decrement('balance', { by: amountWithCommaFrom });
-                await bankAccountFrom.save();
+                if (currency == bankAccountFrom.currency) {
+                    console.log(bankAccountFrom.balance, transactionOut.amount)
+                    const amountWithCommaFrom = amount.replace(".", ",");
+                    bankAccountFrom.decrement('balance', { by: amountWithCommaFrom });
+                    await bankAccountFrom.save();
+                } else {
+                    //console.log("this",currency,bankAccountFrom.currency,amount)
+                    let value = getExchangeConvertion(currency, bankAccountFrom.currency, amount)
+                    const amountWithCommaFrom = value.replace(".", ",");
+                    bankAccountFrom.decrement('balance', { by: amountWithCommaFrom });
+                    await bankAccountFrom.save();
+                }
+
 
                 const transactionIn = await Transaction.build({
                     amount: parseFloat(amount),
                     date,
                     category,
-                    type: 'expense',
+                    type: 'income',
                     id_bank_account: id_account_destination
                 }).save();
-                console.log(bankAccountTo.balance, parseFloat(amount))
-                const amountWithComma = amount.replace(".", ",");
-                bankAccountTo.increment('balance', { by: amountWithComma });
-                await bankAccountTo.save();
 
-                //console.log(transactionIn, transactionOut)
+                if (currency == bankAccountTo.currency) {
+                    console.log(bankAccountTo.balance, parseFloat(amount))
+                    const amountWithComma = amount.replace(".", ",");
+                    bankAccountTo.increment('balance', { by: amountWithComma });
+                    await bankAccountTo.save();
+                } else {
+                    let value = getExchangeConvertion(currency, bankAccountTo.currency, amount)
+                    const amountWithCommaFrom = value.replace(".", ",");
+                    bankAccountTo.increment('balance', { by: amountWithCommaFrom });
+                    await bankAccountTo.save();
+                }
+
+
+                console.log(transactionIn, transactionOut)
                 return response.status(200).send({
                     successfull: true,
                     message: "Transfert created successfuly",

@@ -9,10 +9,10 @@ export async function addTransaction(request, response) {
     try {
         const { amount, date, category, type } = request.body;
         let idBankAccount
-        if(request.params.id){
+        if (request.params.id) {
             idBankAccount = request.params.id
-        }else{
-            idBankAccount=request.body.id_bank_account
+        } else {
+            idBankAccount = request.body.id_bank_account
         }
 
         //console.log(idBankAccount,amount,date,category,type)
@@ -27,9 +27,9 @@ export async function addTransaction(request, response) {
         });
 
         if (!bankAccountFound) {
-            return response.status(404).send({ 
-                successfull:false,
-                message: "Bank Account not found" 
+            return response.status(404).send({
+                successfull: false,
+                message: "Bank Account not found"
             });
         }
 
@@ -39,36 +39,62 @@ export async function addTransaction(request, response) {
             })
         }*/
 
-        console.log(bankAccountFound.balance)
-        if (parseFloat(bankAccountFound.balance)>=parseFloat(amount)) {
+        console.log("Account balance: ", bankAccountFound.balance)
+
+        if (type === 'income') {
             const transaction = await Transaction.build({
-                amount:parseFloat(amount),
+                amount: parseFloat(amount),
                 date,
                 category,
                 type,
                 id_bank_account: idBankAccount
             }).save();
-
-            bankAccountFound.balance-=parseFloat(amount);
+            const amountWithCommaFrom = amount.replace(".", ",");
+            bankAccountFound.increment('balance', { by: amountWithCommaFrom });
             await bankAccountFound.save();
-    
             return response.status(200).send({
-                successfull:true,
+                successfull: true,
                 message: "Transaction Successfully",
                 transaction: transaction
             });
-        }else{
+        } else if (type === 'expense') {
+            if (parseFloat(bankAccountFound.balance) >= parseFloat(amount)) {
+                const transaction = await Transaction.build({
+                    amount: parseFloat(amount),
+                    date,
+                    category,
+                    type,
+                    id_bank_account: idBankAccount
+                }).save();
+                const amountWithCommaFrom = amount.replace(".", ",");
+                bankAccountFound.decrement('balance', { by: amountWithCommaFrom });
+                //bankAccountFound.balance -= parseFloat(amount);
+                await bankAccountFound.save();
+
+                return response.status(200).send({
+                    successfull: true,
+                    message: "Transaction Successfully",
+                    transaction: transaction
+                });
+            } else {
+                return response.status(200).send({
+                    successfull: false,
+                    message: "Insufficient Funds"
+                });
+            }
+        } else {
             return response.status(200).send({
-                successfull:false,
-                message: "Insufficient Funds"
+                successfull: false,
+                message: "Type Transaction not valid"
             });
         }
+
 
 
     } catch (error) {
         console.log(error);
         return response.status(500).send({
-            successfull:false,
+            successfull: false,
             message: "Error creating the transaction"
         });
     }
@@ -191,11 +217,11 @@ export async function transactionHistory(request, response) {
     const transactions = await Transaction.findAll({
         include: {
             model: BankAccount,
-            where: {id_user:idUser}
+            where: { id_user: idUser }
         },
-        where:filters
+        where: filters
     });
-    
+
 
     if (transactions) {
         return response.status(200).send({
