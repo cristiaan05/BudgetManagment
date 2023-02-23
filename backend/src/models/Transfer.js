@@ -15,7 +15,7 @@ const Transfer = db.get().define(
             allowNull: false
         },
         amount: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10,2),
             allowNull: false
         }
         ,

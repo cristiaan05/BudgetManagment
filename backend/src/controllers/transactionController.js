@@ -39,19 +39,31 @@ export async function addTransaction(request, response) {
             })
         }*/
 
-        const transaction = await Transaction.build({
-            amount:parseFloat(amount),
-            date,
-            category,
-            type,
-            id_bank_account: idBankAccount
-        }).save();
+        console.log(bankAccountFound.balance)
+        if (parseFloat(bankAccountFound.balance)>=parseFloat(amount)) {
+            const transaction = await Transaction.build({
+                amount:parseFloat(amount),
+                date,
+                category,
+                type,
+                id_bank_account: idBankAccount
+            }).save();
 
-        response.status(200).send({
-            successfull:true,
-            message: "Transaction Successfully",
-            transaction: transaction
-        });
+            bankAccountFound.balance-=parseFloat(amount);
+            await bankAccountFound.save();
+    
+            return response.status(200).send({
+                successfull:true,
+                message: "Transaction Successfully",
+                transaction: transaction
+            });
+        }else{
+            return response.status(200).send({
+                successfull:false,
+                message: "Insufficient Funds"
+            });
+        }
+
 
     } catch (error) {
         console.log(error);

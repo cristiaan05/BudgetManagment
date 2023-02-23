@@ -7,6 +7,7 @@ import userRouter from "../routes/userRoutes.js";
 import cookieParser from "cookie-parser"
 import transRouter from "../routes/transactionRoutes.js";
 import transferRouter from "../routes/transferRoutes.js";
+import exchangeRouter from "../routes/exchangeRoutes.js";
 const app = express();
 
 app.use(cors({
@@ -19,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   "/app",
-  userRouter,bankRouter,transRouter,transferRouter
+  userRouter,bankRouter,transRouter,transferRouter,exchangeRouter
 );
 
 export default app;
