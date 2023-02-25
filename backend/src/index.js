@@ -4,9 +4,13 @@ import db from "../src/db/configDB.js"
 
 configureEnvVars();
 
-const PORT = 3000;
+const PORT = 3800;
 
-app.listen(PORT, () => {
-  console.log(`API IS RUNNING IN http://localhost:${PORT}`);
-  db.connect();
-});
+db.connect()
+  .then(() => {
+    console.log("Connected to database");
+    app.listen(PORT, () => {
+      console.log(`API IS RUNNING IN http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => console.error(err));

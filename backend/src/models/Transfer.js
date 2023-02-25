@@ -15,23 +15,42 @@ const Transfer = db.get().define(
             allowNull: false
         },
         amount: {
-            type: DataTypes.DECIMAL(10,2),
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false
         }
         ,
         currency: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        id_account: {
+            type: DataTypes.UUID,
+            references: {
+                model: BankAccount,
+                key: 'id',
+            },
+        },
+        id_account_destination: {
+            type: DataTypes.UUID,
+            references: {
+                model: BankAccount,
+                key: 'id',
+            },
         }
     },
     {
-        schema: "PDBADMIN",
+        schema: "APPUSER",
     }
 );
+// BankAccount.hasMany(Transfer, { foreignKey: 'id_account', sourceKey: 'id' });
+// Transfer.belongsTo(BankAccount, { foreignKey: 'id_account', targetKey: 'id' });
 
-BankAccount.hasMany(Transfer, { foreignKey: 'id_account', sourceKey: 'id' });
-Transfer.belongsTo(BankAccount, { foreignKey: 'id_account', targetKey: 'id' });
+// BankAccount.hasMany(Transfer, { foreignKey: 'id_account_destination', sourceKey: 'id' });
+// Transfer.belongsTo(BankAccount, { foreignKey: 'id_account_destination', targetKey: 'id' });
 
-BankAccount.hasMany(Transfer, { foreignKey: 'id_account_destination', sourceKey: 'id' });
-Transfer.belongsTo(BankAccount, { foreignKey: 'id_account_destination', targetKey: 'id' });
+
+// BankAccount.hasMany(Transfer, { foreignKey: 'id_account', sourceKey: 'id' });
+// BankAccount.hasMany(Transfer, { foreignKey: 'id_account_destination', sourceKey: 'id' });
+// Transfer.belongsTo(BankAccount, { foreignKey: 'id_account', targetKey: 'id' });
+// Transfer.belongsTo(BankAccount, { foreignKey: 'id_account_destination', targetKey: 'id' });
 export default Transfer;

@@ -37,12 +37,12 @@ const Transaction = db.get().define(
 
     },
     {
-        schema: "PDBADMIN",
+        schema: "APPUSER",
     }
 );
 
-BankAccount.hasMany(Transaction, { foreignKey: 'id_bank_account', sourceKey: 'id' });
-Transaction.belongsTo(BankAccount, { foreignKey: 'id_bank_account', targetKey: 'id', });
+// BankAccount.hasMany(Transaction, { foreignKey: 'id_bank_account', sourceKey: 'id' });
+// Transaction.belongsTo(BankAccount, { foreignKey: 'id_bank_account', targetKey: 'id', });
 
 
 export default Transaction;
