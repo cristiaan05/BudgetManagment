@@ -88,7 +88,7 @@ export async function signIn(request, response) {
     };
 
     const token = jwt.sign(userPayload, process.env.PRIVATE_KEY);
-    response.cookie("authorization", token);
+    response.cookie("usertoken", token);
     return response.status(200).send({
       successfull: true,
       message: "Login Successfull",

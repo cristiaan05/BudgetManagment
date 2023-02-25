@@ -1,5 +1,5 @@
 ## Build
-# docker build -t backend:0.1.0 .
+# docker build -t backend:0.1.1 .
 # RUN
 # docker run -d -e -p 3800:3800 ORACLE_USER=appuser -e ORACLE_PASS=myapppass -e ORACLE_CONNSTR=localhost:1521/xepdb1 backend:0.1.0
 
