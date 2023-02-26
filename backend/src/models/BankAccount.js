@@ -32,7 +32,7 @@ const BankAccount = db.get().define(
         }
     },
     {
-        schema: "APPUSER",
+        schema: "PDBADMIN",
     }
 );
 

@@ -28,7 +28,7 @@ const User = db.get().define(
         },
     },
     {
-        schema: "APPUSER",
+        schema: "PDBADMIN",
     }
 );
 

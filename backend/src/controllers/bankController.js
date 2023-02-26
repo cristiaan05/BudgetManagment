@@ -18,7 +18,7 @@ export async function addAcount(request, response) {
         //extract the id of user logged by the token in cookies authorization
         const decodedToken = request.token
         const idUser = decodedToken.id
-        console.log("this is the token loggin: ", decodedToken.id);
+        //console.log("this is the token loggin: ", decodedToken.id);
 
 
         const userFound = await User.findOne({

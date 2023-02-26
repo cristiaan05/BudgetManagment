@@ -35,7 +35,7 @@ export async function signUp(request, response) {
       password: passwordHash,
     }).save();
 
-    response.send({
+    return response.send({
       successfull:true,
       message: "User Created Successfully",
       user: user.getDataValue("id")
@@ -88,7 +88,7 @@ export async function signIn(request, response) {
     };
 
     const token = jwt.sign(userPayload, process.env.PRIVATE_KEY);
-    response.cookie("usertoken", token);
+    //response.cookie("usertoken", token).send('cookie set');
     return response.status(200).send({
       successfull: true,
       message: "Login Successfull",

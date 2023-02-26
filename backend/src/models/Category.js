@@ -19,7 +19,7 @@ const Category = db.get().define(
         }
     },
     {
-        schema: "APPUSER",
+        schema: "PDBADMIN",
     }
 );
 

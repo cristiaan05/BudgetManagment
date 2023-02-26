@@ -29,18 +29,20 @@ const Transaction = db.get().define(
         },
         id_bank_account: {
             type: DataTypes.UUID,
-            references: {
-                model: BankAccount,
-                key: 'id',
-            },
+            allowNull:false
+            // references: {
+            //     model: BankAccount,
+            //     key: 'id',
+            // },
         }
 
     },
     {
-        schema: "APPUSER",
+        schema: "PDBADMIN",
     }
 );
 
+Transaction.belongsTo(BankAccount, { foreignKey: 'id_bank_account' });
 // BankAccount.hasMany(Transaction, { foreignKey: 'id_bank_account', sourceKey: 'id' });
 // Transaction.belongsTo(BankAccount, { foreignKey: 'id_bank_account', targetKey: 'id', });
 

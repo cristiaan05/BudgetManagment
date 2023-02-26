@@ -39,7 +39,7 @@ const Transfer = db.get().define(
         }
     },
     {
-        schema: "APPUSER",
+        schema: "PDBADMIN",
     }
 );
 // BankAccount.hasMany(Transfer, { foreignKey: 'id_account', sourceKey: 'id' });
